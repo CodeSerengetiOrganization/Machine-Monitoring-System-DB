@@ -50,6 +50,9 @@ INSERT INTO machines(machine_id,machine_name) VALUES
 (2,'machineB'),
 (3,'machineC'),
 (4,'machineD');
+
+# verify data
+SELECT * FROM machines;
 #-------------------------------------------------------machines table ends------------------------------------
 
 #-------------------------------------------------------false_alarm table begines------------------------------------
@@ -91,4 +94,14 @@ SELECT * FROM  false_alarm;
 
 #-------------------------------------------------------false_alarm table ends------------------------------------
 
+#-------------------------------------------------------false_alarm_machine_summary table begines------------------
+CREATE TABLE false_alarm_machine_summary (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    machine_station_code INT NOT NULL,
+    rack_code INT NOT NULL,
+    channel_number INT NOT NULL,
+    false_alarm_count INT NOT NULL
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+DESC false_alarm_machine_summary;
+#-------------------------------------------------------false_alarm_machine_summary table ends   ------------------
