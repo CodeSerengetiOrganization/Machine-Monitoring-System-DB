@@ -7,18 +7,18 @@ ADD CONSTRAINT fk_false_alarm_station
     REFERENCES t_machine_station(f_station_code);
 
 -- Add foreign key constraint to false_alarm_summary table
-ALTER TABLE false_alarm_summary
-ADD CONSTRAINT fk_false_alarm_summary_station 
-    FOREIGN KEY (station_code) 
+ALTER TABLE false_alarm_machine_summary
+ADD CONSTRAINT fk_false_alarm_machine_summary_station 
+    FOREIGN KEY (machine_station_code) 
     REFERENCES t_machine_station(f_station_code);
 
--- Add foreign key constraints to product_fail_cumulative table
-ALTER TABLE product_fail_cumulative
+-- Add foreign key constraints to t_product_fail_cumulative table
+ALTER TABLE t_product_fail_cumulative
 ADD CONSTRAINT fk_product_fail_product 
-    FOREIGN KEY (product_code) 
+    FOREIGN KEY (f_product_code) 
     REFERENCES t_product(f_product_code);
 
-ALTER TABLE product_fail_cumulative
+ALTER TABLE t_product_fail_cumulative
 ADD CONSTRAINT fk_product_fail_station 
-    FOREIGN KEY (station_code) 
+    FOREIGN KEY (f_station_code) 
     REFERENCES t_machine_station(f_station_code);
