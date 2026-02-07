@@ -83,7 +83,64 @@ END //
 
 DELIMITER ;
 
+-- Insert 12 batches of 200 records each--for bathtub curve for Machine Monitoring System for channel2
+DELIMITER //
+CREATE PROCEDURE InsertManufacturingDataChannel2()
+BEGIN
+    SET @batch_num = 1;
+    SET @barcode_num = 1;
+    SET @start_time = '2023-11-01 10:05:00';
+    SET @operator_index = 1;
+
+    WHILE @batch_num <= 12 DO
+        SET @operator = CONCAT('Operator', CHAR(64 + @operator_index));
+
+        SET @record_num = 1;
+        WHILE @record_num <= 200 DO
+            INSERT INTO t_manufacturing_simple_result (
+                f_barcode,
+                f_product_code,
+                f_station_code,
+                f_station_channel_no,
+                f_result,
+                f_operator,
+                f_start_time,
+                f_end_time,
+                f_comment
+            ) VALUES (
+                CONCAT('barcode', LPAD(@barcode_num, 4, '0')),
+                112233,
+                4,
+                2,
+                CASE
+                    WHEN @batch_num = 1 AND (@record_num = 50 OR @record_num = 75 OR @record_num = 100 OR @record_num = 125) THEN 0
+                    WHEN @batch_num = 2 AND @record_num = 100 THEN 0
+                    WHEN @batch_num = 3 AND @record_num = 100 THEN 0
+                    WHEN @batch_num = 10 AND (@record_num = 50 OR @record_num = 100 OR @record_num = 150) THEN 0
+                    WHEN @batch_num = 11 AND (@record_num = 25 OR @record_num = 50 OR @record_num = 100 OR @record_num = 150 OR @record_num = 175 OR @record_num = 185) THEN 0
+                    WHEN @batch_num = 12 AND (@record_num = 25 OR @record_num = 50 OR @record_num = 75 OR @record_num = 125 OR @record_num = 150 OR @record_num = 175 OR @record_num = 175 OR @record_num = 195) THEN 0
+                    ELSE 1
+                END,
+                @operator,
+                @start_time,
+                DATE_ADD(@start_time, INTERVAL 2 MINUTE),
+                CONCAT('manufacturing line test - ', @operator)
+            );
+
+            SET @barcode_num = @barcode_num + 1;
+            SET @start_time = DATE_ADD(@start_time, INTERVAL 2 MINUTE);
+            SET @record_num = @record_num + 1;
+        END WHILE;
+
+        SET @batch_num = @batch_num + 1;
+        SET @operator_index = IF(@operator_index = 2, 1, 2);
+    END WHILE;
+END //
+
+DELIMITER ;
 -- Call the stored procedure to insert the 12 batch data
 CALL InsertManufacturingData();
+call InsertManufacturingDataChannel2();
 -- Clean up: Drop the procedure after use
 DROP PROCEDURE IF EXISTS InsertManufacturingData;
+DROP PROCEDURE IF EXISTS InsertManufacturingDataChannel2;
